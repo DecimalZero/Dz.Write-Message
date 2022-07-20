@@ -9,7 +9,7 @@
 # RootModule = ''
 
 # Version number of this module.
-ModuleVersion = '1.0.3'
+ModuleVersion = '1.0.6'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -81,7 +81,7 @@ AliasesToExport = @()
 # DscResourcesToExport = @()
 
 # List of all modules packaged with this module
-# ModuleList = @()
+# ModuleList = @('Dz.Write-Message.psm1')
 
 # List of all files packaged with this module
 # FileList = @()

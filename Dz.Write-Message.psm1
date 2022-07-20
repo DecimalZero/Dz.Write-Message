@@ -1,18 +1,10 @@
-# Region import everything we need
-$culture = $host.CurrentCulture.Name -replace '-\w*$', ''
-Import-LocalizedData  -UICulture $culture -BindingVariable Strings -FileName Strings -ErrorAction Ignore
+# Get the path to the function files
+$PublicPath = $PSScriptRoot + "\Public\"
 
-If (-not $Strings) {
-  Import-LocalizedData  -UICulture "en" -BindingVariable Strings -FileName Strings -ErrorAction Ignore
+# Get list of all function filenames
+$FunctionList = Get-ChildItem -Path $PublicPath -Include *.ps1 -Name
+
+# Loop through all discovered files and dot-source them into memory
+ForEach ( $Function in $FunctionList ) {
+    . ( $PublicPath + $Function )
 }
-
-Try {
-  [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
-}Catch {
-  Write-Warning -Message $Strings.SystemDrawingAvailable
-}
-
-Foreach ($Directory in @('Private', 'Public')) {
-  Get-ChildItem -Path "$PSScriptRoot\$Directory\*.ps1" | ForEach-Object {. $_.FullName}
-}
-
