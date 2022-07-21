@@ -1,4 +1,5 @@
-![Write-Message](https://github.com/DecimalZero/Dz.Write-Message/tree/main/Images/Write-Message.png)
+![Write-Message](https://github.com/DecimalZero/Dz.Write-Message/tree/main/Images/Write-Message.png?raw=true)
+
 <pre>
 Write-Message is a wrapper around Write-Host allowing to display multiple colors of text on one line, and
 will write the same message to an audit log file. Additional formatting includes line message indentation,
