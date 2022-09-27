@@ -2,7 +2,7 @@
 
 .NAME Write-Message
 
-.VERSION 1.0.2
+.VERSION 1.0.8
 
 .DESCRIPTION 
  Write-Message is a wrapper around Write-Host allowing to display multiple colors of
@@ -43,49 +43,52 @@ https://github.com/DecimalZero/Dz-Write-Message/blob/main/README.md
 .PRIVATEDATA N/A
 
 .PARAMETERS   
-Data  
+Data
+  | Write-Message {Message} {Foreground Color} {Background Color} {[-Indent1] [-Indent2] [-AddLineBefore] [-AddLineAfter]}
+  |
   | The message to be passed into the function.  
-  | EXAMPLE: Write-Message 'Warning: The number of customers exceeded the maximum number of 39!!' 'Yellow'  
-  |  
+  | EXAMPLE: Write-Message 'Warning: The number of customers exceeded the maximum number of 39!!' 'Yellow' 'Black' -Indent2 -AddLineBefore -AddLineAfter
+  |
   | Alternatively, Double Quotes can be utilized to add variables.  
-  | EXAMPLE: Write-Message "Warning: The number of customers exceeded the maximum number of $MaxNumber!!" 'Yellow'  
-  |  
-Color  
-  | Font Colors: All font colors supported by PowerShell.  
-  | | Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta  
-  | | DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, & Yellow  
-  | |  
-  | Single Font Color:  
-  | | If No font color is specified, font color White will be used.  
-  | | EXAMPLE: Write-Message 'Warning: The number of customers exceeded the maximum number of 39!!'  
-  | |   
-  | | Alternatively, no quotes are required when defining the color.  
-  | | EXMAPLE: Write-Message 'Warning: The number of customers exceeded the maximum number of 39!!' Red  
-  | |  
-  | Multiple Font Colors on Same Line:  
+  | EXAMPLE: Write-Message "Warning: The number of customers exceeded the maximum number of $MaxNumber!!" 'Yellow' 'Black'
+  |
+Color
+  | |
+  | Foreground Font Colors: All font colors supported by PowerShell.  
+  | | Black, Blue, Cyan, DarkBlue, DarkCyan, DarkGray, DarkGreen, DarkMagenta,  
+  | | DarkRed, DarkYellow, Gray, Green, Magenta, Red, White, & Yellow
+  | |
+  | Background Font Colors: All font colors supported by PowerShell.  
+  | | Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, DarkYellow,
+  | | Gray, DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, & White  
+  | |
+  | Multiple Foreground Font Colors on Same Line:
   | | Must seperate by "|" without quotes and must have the exact number of "|" as in the message.  
-  | | EXAMPLE: Write-Message 'Warning: |The number of customers exceeded the maximum number of |39|!!' 'Red|White|Yellow|White'  
-  | |  
-  |  
+  | | EXAMPLE: Write-Message 'Warning: |The number of customers exceeded the maximum number of |39|!!' 'Red|White|Yellow|White' 'Black'
+  | |
+  | | No quotes are required when defining the color.  
+  | | EXMAPLE: Write-Message 'Warning: The number of customers exceeded the maximum number of 39!!' Red Black
+  | |
+  |
 -Indent1  
   | Add line indentation before the message.  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' -Indent1  
-  |  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent1  
+  |
 -Indent2  
   | Add line indentation before the message  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' -Indent2  
-  |  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent2  
+  |
 -AddLineBefore  
   | Adds a line before the message.  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' -AddLineBefore  
-  |  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -AddLineBefore  
+  |
 -AddLineAfter  
   | Adds a line after the message.  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' -AddLineAfter  
-  |  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -AddLineAfter  
+  |
 
 .EXAMPLE
-Write-Message 'Warning: |The number of customers exceeded the maximum number of |39|!!' 'Red|Cyan|Yellow|Cyan' -Indent2 -AddLineBefore -AddLineAfter
+Write-Message 'Warning: |The number of customers exceeded the maximum number of |39|!!' 'Red|Cyan|Yellow|Cyan' 'Black' -Indent2 -AddLineBefore -AddLineAfter
 
 .AUDITLOGS
 If the $Global:AuditLogPathFile variable is missing, no logs will be written.  
@@ -107,7 +110,8 @@ If(-Not(Test-Path -LiteralPath (($PSScriptRoot) + ("\$AuditFolderName")))){
 Function Write-Message{# Function to write message to host and audit log
   Param (
     [String]$Data,
-    [String]$Color = 'White',
+    [String]$ForegroundColor = 'White',
+    [String]$BackgroundColor = 'Black',
     [Switch]$Indent1,
     [Switch]$Indent2,
     [Switch]$AddLineAfter,
@@ -134,7 +138,7 @@ Function Write-Message{# Function to write message to host and audit log
     # Split data array
     $DataMember = $Data.Split('|')
     # Split color array
-    $DataColor = $Color.Split('|')
+    $DataColor = $ForegroundColor.Split('|')
     # Loop through each data member in array
     For ($x = 0; $x -lt $DataMember.Count; $x++){
       Switch ($x){
@@ -182,9 +186,9 @@ Function Write-Message{# Function to write message to host and audit log
     }
     # Check if new line flag exists
     If($AddLineAfter){
-      Write-Host ($IndentMessage + $Data) -ForegroundColor $Color; Write-Host
+      Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor; Write-Host
     }Else {
-      Write-Host ($IndentMessage + $Data) -ForegroundColor $Color
+      Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
     }
       
     # Add data to message variable
