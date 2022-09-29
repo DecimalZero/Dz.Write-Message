@@ -2,7 +2,7 @@
 
 .NAME Write-Message
 
-.VERSION 1.0.8
+.VERSION 1.0.9
 
 .DESCRIPTION 
  Write-Message is a wrapper around Write-Host allowing to display multiple colors of
@@ -134,11 +134,11 @@ Function Write-Message{# Function to write message to host and audit log
     $AddLineBreak = $Null
   }
   # Process multicolor host message 
-  If($Data.Contains('|')){
-    # Split data array
-    $DataMember = $Data.Split('|')
+  If($ForegroundColor.Contains('|')){
     # Split color array
     $DataColor = $ForegroundColor.Split('|')
+    # Split data array
+    $DataMember = $Data.Split('|')
     # Loop through each data member in array
     For ($x = 0; $x -lt $DataMember.Count; $x++){
       Switch ($x){
