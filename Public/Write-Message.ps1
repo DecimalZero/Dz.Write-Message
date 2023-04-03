@@ -70,14 +70,36 @@ Color
   | | EXMAPLE: Write-Message 'Warning: The number of customers exceeded the maximum number of 39!!' Red Black
   | |
   |
--Indent1  
+-Indent
   | Add line indentation before the message.  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent1  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent
+  | OUTPUT: '   Hello World'
   |
--Indent2  
+-Indent1
+  | Add line indentation before the message.  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent1
+  | OUTPUT: ' - Hello World'  
+  |
+-Indent2
   | Add line indentation before the message  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent2  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent2
+  | OUTPUT: '  -- Hello World'  
   |
+-Indent3
+  | Add line indentation before the message  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent3
+  | OUTPUT: '   --- Hello World'  
+  |
+-Indent4
+  | Add line indentation before the message  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent4
+  | OUTPUT: '    ---- Hello World'  
+  |
+-Indent5
+  | Add line indentation before the message  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent5
+  | OUTPUT: '     ----- Hello World'  
+  |      
 -AddLineBefore  
   | Adds a line before the message.  
   | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -AddLineBefore  
@@ -112,29 +134,50 @@ Function Write-Message{# Function to write message to host and audit log
     [String]$Data,
     [String]$ForegroundColor = 'White',
     [String]$BackgroundColor = 'Black',
+    [Switch]$Indent,
     [Switch]$Indent1,
     [Switch]$Indent2,
+    [Switch]$Indent3,
+    [Switch]$Indent4,
+    [Switch]$Indent5,    
     [Switch]$AddLineAfter,
     [Switch]$AddLineBefore
   )
   # Set indent line
-  If($Indent1){
-    $IndentMessage = ' - '
+  If ($Indent){
+    $IndentMessage = '   '
   }Else {
-    If($Indent2){
-      $IndentMessage = '   '
+    If ($Indent1){
+      $IndentMessage = ' - '
     }Else {
-      $IndentMessage = $Null
+      If ($Indent2){
+        $IndentMessage = '  -- '
+      }Else {
+        If ($Indent3){
+          $IndentMessage = '   --- '
+        }Else {
+          If ($Indent4){
+            $IndentMessage = '    ---- '
+          }Else {
+            If ($Indent5){
+              $IndentMessage = '     ----- '
+            }Else {
+              $IndentMessage = $Null
+            }
+          }
+        }
+      }
     }
   }
+
   # Set add line before
-  If($AddLineBefore){
+  If ($AddLineBefore){
     $AddLineBreak = "`n"
   }Else {
     $AddLineBreak = $Null
   }
   # Process multicolor host message 
-  If($ForegroundColor.Contains('|')){
+  If ($ForegroundColor.Contains('|')){
     # Split color array
     $DataColor = $ForegroundColor.Split('|')
     # Split data array
@@ -153,12 +196,12 @@ Function Write-Message{# Function to write message to host and audit log
         # End of string
         {$DataMember.Count -eq $x+1}{
           # Check for the addline switch
-          If($AddLineAfter){
+          If ($AddLineAfter){
             # Write the data to the host and include a new line space afterwards
             Write-Host $DataMember[$x] -ForegroundColor $DataColor[$x]; Write-Host
           }Else {
             # Check for the nonewline switch
-            If($NoNewLine){
+            If ($NoNewLine){
               # Write the data to the host and include a new line space afterwards
               Write-Host $DataMember[$x] -ForegroundColor $DataColor[$x] -NoNewline
             }Else {
@@ -181,11 +224,11 @@ Function Write-Message{# Function to write message to host and audit log
     }
   }Else {# Process single host message
     # Check if add line before flag exists
-    If($AddLineBefore){
+    If ($AddLineBefore){
       Write-Host
     }
     # Check if new line flag exists
-    If($AddLineAfter){
+    If ($AddLineAfter){
       Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor; Write-Host
     }Else {
       Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
@@ -196,10 +239,10 @@ Function Write-Message{# Function to write message to host and audit log
   }
   # Save message to audit log
   If ($Global:AuditLogPathFile){
-    If($AddLineBreak){
+    If ($AddLineBreak){
       Add-Content ((get-date -f yyyy-MM-dd-HH-mm-ss) + (':')) -Path $Global:AuditLogPathFile
     }
-    If($AddLineAfter){
+    If ($AddLineAfter){
       Add-Content ((get-date -f yyyy-MM-dd-HH-mm-ss) + (': ') + ($MassageData)) -Path $Global:AuditLogPathFile
       Add-Content ((get-date -f yyyy-MM-dd-HH-mm-ss) + (':')) -Path $Global:AuditLogPathFile
     }Else {
