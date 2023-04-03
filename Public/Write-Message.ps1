@@ -139,11 +139,13 @@ Function Write-Message{# Function to write message to host and audit log
     [Switch]$Indent2,
     [Switch]$Indent3,
     [Switch]$Indent4,
-    [Switch]$Indent5,    
-    [Switch]$AddLineAfter,
-    [Switch]$AddLineBefore
+    [Switch]$Indent5,
+    [Switch]$NoNewLine,
+    [Switch]$AddLineBefore,
+    [Switch]$AddLineAfter    
   )
   # Set indent line
+  # Note, if multiple indent switches are used, the indent with lowest number wins
   If ($Indent){
     $IndentMessage = '   '
   }Else {
@@ -176,6 +178,7 @@ Function Write-Message{# Function to write message to host and audit log
   }Else {
     $AddLineBreak = $Null
   }
+
   # Process multicolor host message 
   If ($ForegroundColor.Contains('|')){
     # Split color array
@@ -193,8 +196,9 @@ Function Write-Message{# Function to write message to host and audit log
           # Add first data pass to message variable
           $MassageData = $IndentMessage + $DataMember[$x]
         }
+
         # End of string
-        {$DataMember.Count -eq $x+1}{
+        {$DataMember.Count -eq $x + 1}{
           # Check for the addline switch
           If ($AddLineAfter){
             # Write the data to the host and include a new line space afterwards
@@ -212,6 +216,7 @@ Function Write-Message{# Function to write message to host and audit log
           # Add first data pass to message data variable
           $MassageData = $MassageData + $DataMember[$x]
         }
+
         # Middle of string
         Default {
           # Write the data to the host
@@ -227,13 +232,18 @@ Function Write-Message{# Function to write message to host and audit log
     If ($AddLineBefore){
       Write-Host
     }
-    # Check if new line flag exists
-    If ($AddLineAfter){
-      Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor; Write-Host
+
+    If ($NoNewLine){
+      Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor -NoNewline
     }Else {
-      Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
+      # Check if new line flag exists
+      If ($AddLineAfter){
+        Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor; Write-Host
+      }Else {
+        Write-Host ($IndentMessage + $Data) -ForegroundColor $ForegroundColor -BackgroundColor $BackgroundColor
+      }
     }
-      
+
     # Add data to message variable
     $MassageData = $IndentMessage + $Data
   }
