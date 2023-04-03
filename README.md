@@ -29,22 +29,44 @@ Color
   | | EXAMPLE: Write-Message 'Warning: |The number of customers exceeded the maximum number of |39|!!' 'Red|White|Yellow|White'  
   | |  
   |  
--Indent1  
+-Indent
   | Add line indentation before the message.  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' -Indent1  
-  |  
--Indent2  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent
+  | OUTPUT: '   Hello World'
+  |
+-Indent1
+  | Add line indentation before the message.  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent1
+  | OUTPUT: ' - Hello World'  
+  |
+-Indent2
   | Add line indentation before the message  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' -Indent2  
-  |  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent2
+  | OUTPUT: '  -- Hello World'  
+  |
+-Indent3
+  | Add line indentation before the message  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent3
+  | OUTPUT: '   --- Hello World'  
+  |
+-Indent4
+  | Add line indentation before the message  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent4
+  | OUTPUT: '    ---- Hello World'  
+  |
+-Indent5
+  | Add line indentation before the message  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -Indent5
+  | OUTPUT: '     ----- Hello World'  
+  |      
 -AddLineBefore  
   | Adds a line before the message.  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' -AddLineBefore  
-  |  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -AddLineBefore  
+  |
 -AddLineAfter  
   | Adds a line after the message.  
-  | EXAMPLE: Write-Message 'Hello World' 'Yellow' -AddLineAfter  
-  |  
+  | EXAMPLE: Write-Message 'Hello World' 'Yellow' 'Black' -AddLineAfter  
+  |
 
 Example:
 Write-Message 'Warning: |The number of customers exceeded the maximum number of |39|!!' 'Red|Cyan|Yellow|Cyan' -Indent2 -AddLineBefore -AddLineAfter
